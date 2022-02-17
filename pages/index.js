@@ -38,7 +38,7 @@ function Example() {
     'projects',
     async ({ pageParam = 1 }) => {
       const res = await axios.get(
-        `https://picsum.photos/v2/list?page=${pageParam}&limit=50`
+        `https://picsum.photos/v2/list?page=${pageParam}&limit=100`
       );
 
       return { photos: res.data, nextPage: pageParam + 1 };
@@ -73,10 +73,17 @@ function Example() {
               ))}
             </React.Fragment>
           ))}
-          <div>
+          <div style={{ margin: 10 }}>
             <button
               onClick={() => fetchNextPage()}
               disabled={!hasNextPage || isFetchingNextPage}
+              style={{
+                width: 300,
+                height: 100,
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                display: 'block',
+              }}
             >
               {isFetchingNextPage
                 ? 'Loading more...'
