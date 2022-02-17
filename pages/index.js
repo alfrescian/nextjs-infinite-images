@@ -7,6 +7,9 @@ import {
   QueryClient,
   QueryClientProvider,
 } from 'react-query';
+const sizes = `
+    (min-width: 1020px) 1000px,
+    calc(100vw - 20px)`;
 
 const queryClient = new QueryClient();
 
@@ -19,8 +22,8 @@ export default function App() {
 }
 
 function Example() {
-  const myLoader = ({ src }) => {
-    return src;
+  const myLoader = ({ src, width }) => {
+    return `https://picsum.photos/id/${src}/${width}/${width}`;
   };
 
   const {
@@ -46,7 +49,7 @@ function Example() {
   );
 
   return (
-    <div>
+    <div style={{ maxWidth: 1000, marginLeft: 'auto', marginRight: 'auto' }}>
       <h1>Infinite Loading</h1>
       {status === 'loading' ? (
         <p>Loading...</p>
@@ -54,17 +57,17 @@ function Example() {
         <span>Error: {error.message}</span>
       ) : (
         <>
-          {data.pages?.map((page) => (
-            <React.Fragment key={page.id}>
+          {data.pages?.map((page, i) => (
+            <React.Fragment key={i}>
               {page.photos.map((photo) => (
-                <div style={{ padding: 10 }}>
+                <div style={{ padding: 10 }} key={photo.id}>
                   <Image
-                    key={photo.id}
-                    src={photo.download_url}
+                    src={photo.id}
                     width={photo.width}
-                    height={photo.height}
+                    height={photo.width}
                     loader={myLoader}
-                    unoptimized
+                    sizes={sizes}
+                    layout="responsive"
                   />
                 </div>
               ))}
@@ -78,7 +81,7 @@ function Example() {
               {isFetchingNextPage
                 ? 'Loading more...'
                 : hasNextPage
-                ? 'Load Newer'
+                ? 'Load More'
                 : 'Nothing more to load'}
             </button>
           </div>
